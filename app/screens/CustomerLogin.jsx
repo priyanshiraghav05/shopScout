@@ -9,6 +9,7 @@ import {
   Platform,
   Alert,
   ImageBackground,
+  Image,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -41,6 +42,11 @@ const CustomerLogin = () => {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           style={styles.innerContainer}
         >
+          <Image
+            source={require('../../assets/images/customer.jpg')}
+            style={styles.customerImage}
+            resizeMode="cover"
+          />
           <View style={styles.loginBox}>
             <View style={styles.logoContainer}>
               <View style={styles.logoCircle}>
@@ -230,6 +236,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
     letterSpacing: 0.5,
     textAlign: 'center',
+  },
+  customerImage: {
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+    marginBottom: 18,
+    alignSelf: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.18,
+    shadowRadius: 12,
+    elevation: 8,
   },
 });
 

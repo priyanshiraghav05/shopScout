@@ -1,504 +1,400 @@
-import React, { useEffect } from 'react';
+import React, { useRef } from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   Image,
-  Animated,
-  Dimensions,
-  Platform,
   ScrollView,
   ImageBackground,
+  Dimensions,
+  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import type { StackNavigationProp } from '@react-navigation/stack';
 import OnboardingCarousel from '../components/OnboardingCarousel';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
+
+// Only use valid Ionicons icon names
+const featureSlides = [
+  {
+    icon: 'trending-up-outline',
+    title: 'Compare Prices Instantly',
+    description: 'Find the best deals from nearby shops in real-time',
+    colors: ['#FF6B6B', '#FF8E8E'] as [string, string],
+  },
+  {
+    icon: 'shield-checkmark-outline',
+    title: 'Verified Local Shops',
+    description: 'Shop with confidence from trusted vendors',
+    colors: ['#4ECDC4', '#6EE7E7'] as [string, string],
+  },
+  {
+    icon: 'grid-outline',
+    title: 'One Place for Everything',
+    description: 'Electronics, gadgets, accessories and more',
+    colors: ['#9D6B53', '#6B4F4F'] as [string, string],
+  },
+  {
+    icon: 'person-outline',
+    title: 'Made for You',
+    description: 'Smart shopping experience curated for your needs',
+    colors: ['#FFB75E', '#ED8F03'] as [string, string],
+  },
+];
+
+const infoCards = [
+  {
+    icon: 'trending-up-outline',
+    title: 'Best Deals',
+    description: 'Get notified about price drops',
+  },
+  {
+    icon: 'notifications-outline',
+    title: 'Price Alerts',
+    description: 'Never miss a great deal',
+  },
+  {
+    icon: 'git-compare-outline',
+    title: 'Best Comparison',
+    description: 'Compare prices easily',
+  },
+];
+
+type RootStackParamList = {
+  MainScreen: undefined;
+  CustomerLogin: undefined;
+  CustomerSignup: undefined;
+  ShopkeeperLogin: undefined;
+  ShopkeeperSignup: undefined;
+  ShopkeeperDashboard: undefined;
+  CustomerHome: undefined;
+  CategoryScreen: undefined;
+  AdminDashboard: undefined;
+};
 
 const MainScreen = () => {
-  console.log('MainScreen rendering');
-  const navigation = useNavigation();
-  const fadeAnim = new Animated.Value(0);
-  const slideAnim = new Animated.Value(0);
-  const scaleAnim = new Animated.Value(1);
-
-  useEffect(() => {
-    console.log('MainScreen useEffect running');
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.spring(slideAnim, {
-        toValue: 1,
-        tension: 65,
-        friction: 11,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
-  const translateY = slideAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [50, 0],
-  });
-
-  const handlePressIn = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 0.95,
-      useNativeDriver: true,
-      tension: 65,
-      friction: 11,
-    }).start();
-  };
-
-  const handlePressOut = () => {
-    Animated.spring(scaleAnim, {
-      toValue: 1,
-      useNativeDriver: true,
-      tension: 65,
-      friction: 11,
-    }).start();
-  };
+  const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
 
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={["#f5e1da", "#e0c3a5", "#c8a27a"]}
-        style={styles.container}
+    <View style={styles.rootContainer}>
+      {/* Top Navbar */}
+      <View style={styles.topNavbar}>
+        <Image
+          source={require('../../assets/images/shopScout.png')}
+          style={styles.navLogo}
+          resizeMode="contain"
+        />
+        <Text style={styles.navTitle}>ShopScout</Text>
+      </View>
+
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
       >
-        <ScrollView 
-          contentContainerStyle={styles.scrollContent}
-          showsVerticalScrollIndicator={false}
-        >
-          {/* Header with Logo */}
-          <View style={styles.header}>
-            <View style={styles.logoContainer}>
-              <Image
-                source={require('../../assets/images/shopScout.png')}
-                style={styles.logoSmall}
-                resizeMode="contain"
-              />
-              <Text style={styles.logoText}>ShopScout</Text>
+        {/* Header Image with Overlay */}
+        <View style={styles.headerImageContainer}>
+          <ImageBackground
+            source={require('../../assets/images/bgImage_Project.jpg')}
+            style={styles.headerImage}
+            imageStyle={styles.headerImageStyle}
+            resizeMode="cover"
+          >
+            <View style={styles.headerOverlay}>
+              <Text style={styles.headerTitle}>ShopScout</Text>
+              <Text style={styles.headerSubtitle}>Your Smart Shopping Companion</Text>
             </View>
-          </View>
+          </ImageBackground>
+        </View>
 
-          {/* Hero Banner */}
-          <View style={styles.heroBanner}>
-            <ImageBackground
-              source={require('../../assets/images/bgImage_Project.jpg')}
-              style={styles.mainBackground}
-              imageStyle={styles.backgroundImage}
-              resizeMode="cover"
-            >
+        {/* Role Selection Cards */}
+        <View style={styles.roleCardsRow}>
+          {/* Customer Card */}
+          <TouchableOpacity
+            style={styles.roleCard}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('CustomerLogin')}
+          >
+            <View style={styles.roleIconCircle}>
+              <Ionicons name="person-outline" size={32} color="#4b2e23" />
+            </View>
+            <Text style={styles.roleTitle}>Customer</Text>
+            <Text style={styles.roleSubtitle}>Find best deals</Text>
+            <View style={styles.roleButton}>
               <LinearGradient
-                colors={['rgba(255, 245, 242, 0.5)', 'rgba(232, 213, 196, 0.6)']}
-                style={styles.heroGradient}
+                colors={["#6b3f2a", "#4b2e23"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.roleButtonGradient}
               >
-                <Animated.View 
-                  style={[
-                    styles.heroContent,
-                    {
-                      opacity: fadeAnim,
-                      transform: [{ translateY }],
-                    },
-                  ]}
-                >
-                  <Text style={styles.heroTitle}>ShopScout</Text>
-                  <Text style={styles.heroSubtitle}>Bringing the Best of Local Shopping Right to Your Fingertips!</Text>
-                  <View style={styles.heroLine} />
-                </Animated.View>
+                <Text style={styles.roleButtonText}>Continue</Text>
+                <Ionicons name="arrow-forward-outline" size={16} color="white" style={{ marginLeft: 4 }} />
               </LinearGradient>
-            </ImageBackground>
-          </View>
+            </View>
+          </TouchableOpacity>
+          {/* Shopkeeper Card */}
+          <TouchableOpacity
+            style={styles.roleCard}
+            activeOpacity={0.85}
+            onPress={() => navigation.navigate('ShopkeeperLogin')}
+          >
+            <View style={styles.roleIconCircle}>
+              <Ionicons name="business-outline" size={32} color="#4b2e23" />
+            </View>
+            <Text style={styles.roleTitle}>Shopkeeper</Text>
+            <Text style={styles.roleSubtitle}>Manage your store</Text>
+            <View style={styles.roleButton}>
+              <LinearGradient
+                colors={["#6b3f2a", "#4b2e23"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+                style={styles.roleButtonGradient}
+              >
+                <Text style={styles.roleButtonText}>Continue</Text>
+                <Ionicons name="arrow-forward-outline" size={16} color="white" style={{ marginLeft: 4 }} />
+              </LinearGradient>
+            </View>
+          </TouchableOpacity>
+        </View>
 
-          {/* Carousel Section */}
-          <View style={styles.carouselSection}>
-            <OnboardingCarousel />
-          </View>
+        {/* Carousel Section - Use OnboardingCarousel */}
+        <View style={styles.carouselSection}>
+          <OnboardingCarousel />
+        </View>
 
-          {/* Bottom Half - Light Gradient */}
-          <View style={styles.bottomHalf}>
-            <LinearGradient
-              colors={['rgba(255, 245, 242, 0.98)', 'rgba(232, 213, 196, 0.99)']}
-              style={styles.bottomOverlay}
-            >
-              {/* Login Cards Section */}
-              <View style={styles.mainContent}>
-                <Animated.View 
-                  style={[
-                    styles.cardsSection,
-                    {
-                      opacity: fadeAnim,
-                      transform: [{ translateY }],
-                    },
-                  ]}
-                >
-                  <View style={styles.cardsContainer}>
-                    {/* Customer Card */}
-                    <TouchableOpacity 
-                      onPress={() => navigation.navigate('CustomerLogin')}
-                      activeOpacity={0.8}
-                    >
-                      <Animated.View 
-                        style={[
-                          styles.uiCard,
-                          {
-                            transform: [{ scale: scaleAnim }],
-                          },
-                        ]}
-                      >
-                        <View style={styles.cardContent}>
-                          <View style={styles.iconCircle}>
-                            <Ionicons name="person" size={32} color="#6b4f4f" />
-                          </View>
-                          <View style={styles.cardTitleContainer}>
-                            <Text style={styles.cardTitle}>Customer</Text>
-                            <Text style={styles.cardSubtitle}>Find best deals</Text>
-                          </View>
-                          <View style={styles.cardButton}>
-                            <LinearGradient
-                              colors={["#9d6b53", "#6b4f4f"]}
-                              start={{ x: 0, y: 0 }}
-                              end={{ x: 1, y: 0 }}
-                              style={styles.buttonGradient}
-                            >
-                              <Text style={styles.cardButtonText}>Continue</Text>
-                              <Ionicons name="arrow-forward" size={18} color="white" style={styles.buttonIcon} />
-                            </LinearGradient>
-                          </View>
-                        </View>
-                      </Animated.View>
-                    </TouchableOpacity>
+        {/* Bottom Info Cards */}
+        <View style={styles.infoCardsRow}>
+          {infoCards.map((card, idx) => (
+            <View style={styles.infoCard} key={idx}>
+              <Ionicons name={card.icon as any} size={24} color="#4b2e23" style={{ marginBottom: 4 }} />
+              <Text style={styles.infoCardTitle}>{card.title}</Text>
+              <Text style={styles.infoCardDescription}>{card.description}</Text>
+            </View>
+          ))}
+        </View>
+      </ScrollView>
 
-                    {/* Shopkeeper Card */}
-                    <TouchableOpacity 
-                      onPress={() => navigation.navigate('ShopkeeperLogin')}
-                      activeOpacity={0.8}
-                    >
-                      <Animated.View 
-                        style={[
-                          styles.uiCard,
-                          {
-                            transform: [{ scale: scaleAnim }],
-                          },
-                        ]}
-                      >
-                        <View style={styles.cardContent}>
-                          <View style={styles.iconCircle}>
-                            <Ionicons name="business" size={32} color="#6b4f4f" />
-                          </View>
-                          <View style={styles.cardTitleContainer}>
-                            <Text style={styles.cardTitle}>Shopkeeper</Text>
-                            <Text style={styles.cardSubtitle}>Manage your store</Text>
-                          </View>
-                          <View style={styles.cardButton}>
-                            <LinearGradient
-                              colors={["#9d6b53", "#6b4f4f"]}
-                              start={{ x: 0, y: 0 }}
-                              end={{ x: 1, y: 0 }}
-                              style={styles.buttonGradient}
-                            >
-                              <Text style={styles.cardButtonText}>Continue</Text>
-                              <Ionicons name="arrow-forward" size={18} color="white" style={styles.buttonIcon} />
-                            </LinearGradient>
-                          </View>
-                        </View>
-                      </Animated.View>
-                    </TouchableOpacity>
-                  </View>
-                </Animated.View>
-              </View>
-
-              {/* Feature Cards */}
-              <View style={styles.featuresContainer}>
-                {[
-                  {
-                    icon: "trending-up",
-                    title: "Best Deals",
-                    description: "Get notified about price drops"
-                  },
-                  {
-                    icon: "notifications",
-                    title: "Price Alerts",
-                    description: "Never miss a great deal"
-                  },
-                  {
-                    icon: "git-compare",
-                    title: "Best Comparison",
-                    description: "Compare prices easily"
-                  }
-                ].map((feature, index) => (
-                  <Animated.View 
-                    key={index}
-                    style={[
-                      styles.featureCard,
-                      {
-                        transform: [{ scale: scaleAnim }],
-                      },
-                    ]}
-                    onStartShouldSetResponder={() => true}
-                    onResponderGrant={handlePressIn}
-                    onResponderRelease={handlePressOut}
-                  >
-                    <LinearGradient
-                      colors={['rgba(255, 255, 255, 0.95)', 'rgba(255, 255, 255, 0.85)']}
-                      style={styles.featureGradient}
-                    >
-                      <View style={styles.featureIconContainer}>
-                        <Ionicons name={feature.icon} size={32} color="#6b4f4f" />
-                      </View>
-                      <Text style={styles.featureTitle}>{feature.title}</Text>
-                      <Text style={styles.featureDescription}>{feature.description}</Text>
-                    </LinearGradient>
-                  </Animated.View>
-                ))}
-              </View>
-            </LinearGradient>
-          </View>
-        </ScrollView>
-      </LinearGradient>
+      {/* Bottom Navigation Bar */}
+      <View style={styles.bottomNavbar}>
+        <TouchableOpacity style={styles.navButton}>
+          <Ionicons name="home-outline" size={18} color="#fff" />
+          <Text style={styles.navButtonText}>Home</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={[styles.navButton, { opacity: 0.5 }]} disabled>
+          <Ionicons name="paper-plane-outline" size={18} color="#fff" />
+          <Text style={styles.navButtonText}>Explore</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  rootContainer: {
     flex: 1,
-    backgroundColor: '#FFF5F2',
+    backgroundColor: '#f7ede5',
   },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 20,
-  },
-  header: {
-    paddingTop: Platform.OS === 'ios' ? 50 : 30,
-    paddingHorizontal: 16,
-    paddingBottom: 10,
-  },
-  logoContainer: {
+  topNavbar: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#f7ede5',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  logoSmall: {
-    width: 35,
-    height: 35,
+  navLogo: {
+    width: 32,
+    height: 32,
   },
-  logoText: {
+  navTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    marginLeft: 8,
-    color: '#6b4f4f',
+    color: '#4b2e23',
+    marginLeft: 10,
   },
-  heroBanner: {
-    height: height * 0.25,
-    marginBottom: 15,
-  },
-  mainBackground: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  backgroundImage: {
-    opacity: 0.85,
-  },
-  heroGradient: {
-    flex: 1,
-    justifyContent: 'center',
+  scrollContent: {
+    paddingBottom: 80,
     alignItems: 'center',
-    padding: 16,
   },
-  heroContent: {
-    alignItems: 'center',
+  headerImageContainer: {
     width: '100%',
-    maxWidth: 300,
-  },
-  heroTitle: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: '#6b4f4f',
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  heroSubtitle: {
-    fontSize: 14,
-    color: '#6b4f4f',
-    textAlign: 'center',
-    marginBottom: 16,
-    paddingHorizontal: 20,
-  },
-  heroLine: {
-    width: 50,
-    height: 3,
-    backgroundColor: '#6b4f4f',
-    borderRadius: 1.5,
-  },
-  carouselSection: {
-    marginBottom: 15,
-    height: height * 0.2,
-  },
-  bottomHalf: {
-    flex: 1,
-  },
-  bottomOverlay: {
-    flex: 1,
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    padding: 16,
-  },
-  mainContent: {
-    flex: 1,
-  },
-  cardsSection: {
-    marginTop: 15,
-  },
-  cardsContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 10,
-    marginBottom: 20,
-  },
-  uiCard: {
-    flex: 1,
-    backgroundColor: 'white',
-    borderRadius: 15,
-    padding: 15,
-    marginHorizontal: 8,
-    maxWidth: '45%',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 6,
-      },
-      android: {
-        elevation: 3,
-      },
-    }),
-  },
-  cardContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  iconCircle: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    backgroundColor: 'rgba(107, 79, 79, 0.1)',
-    justifyContent: 'center',
-    alignItems: 'center',
+    maxWidth: 520,
+    alignSelf: 'center',
+    marginTop: 18,
     marginBottom: 10,
-  },
-  cardTitleContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  cardTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#6b4f4f',
-    textAlign: 'center',
-  },
-  cardSubtitle: {
-    fontSize: 12,
-    color: '#9d6b53',
-    marginTop: 2,
-    textAlign: 'center',
-  },
-  cardButton: {
+    borderRadius: 18,
     overflow: 'hidden',
-    borderRadius: 12,
+  },
+  headerImage: {
+    width: '100%',
+    height: 210,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  headerImageStyle: {
+    opacity: 0.92,
+  },
+  headerOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.10)',
+    paddingHorizontal: 12,
+  },
+  headerTitle: {
+    fontSize: 44,
+    fontWeight: 'bold',
+    color: '#4b2e23',
+    textAlign: 'center',
+    marginBottom: 10,
+  },
+  headerSubtitle: {
+    fontSize: 20,
+    color: '#4b2e23',
+    backgroundColor: 'rgba(255,255,255,0.85)',
+    borderRadius: 22,
+    paddingHorizontal: 22,
+    paddingVertical: 7,
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+  roleCardsRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    flexWrap: 'wrap',
+    gap: 16,
+    marginTop: 18,
+    marginBottom: 18,
     width: '100%',
   },
-  buttonGradient: {
+  roleCard: {
+    backgroundColor: 'white',
+    borderRadius: 22,
+    padding: 22,
+    flex: 1,
+    minWidth: 140,
+    maxWidth: 260,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    elevation: 3,
+    marginHorizontal: 8,
+    marginVertical: 8,
+  },
+  roleIconCircle: {
+    backgroundColor: '#f7ede5',
+    borderRadius: 50,
+    padding: 14,
+    marginBottom: 10,
+  },
+  roleTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#4b2e23',
+    marginBottom: 2,
+  },
+  roleSubtitle: {
+    fontSize: 13,
+    color: '#4b2e23',
+    marginBottom: 12,
+  },
+  roleButton: {
+    marginTop: 'auto',
+    width: '100%',
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  roleButtonGradient: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
     borderRadius: 12,
   },
-  cardButtonText: {
+  roleButtonText: {
     color: 'white',
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '600',
   },
-  buttonIcon: {
-    marginLeft: 4,
+  carouselSection: {
+    width: '100%',
+    marginTop: 0,
+    marginBottom: 18,
+    alignItems: 'center',
   },
-  featuresContainer: {
+  infoCardsRow: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    flexWrap: 'wrap',
-    gap: 12,
-    paddingHorizontal: 16,
-    paddingVertical: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-    borderTopLeftRadius: 25,
-    borderTopRightRadius: 25,
-    marginTop: 15,
+    justifyContent: 'space-between',
+    width: '100%',
+    maxWidth: 500,
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 24,
+    gap: 16,
   },
-  featureCard: {
+  infoCard: {
+    backgroundColor: 'white',
+    borderRadius: 18,
     flex: 1,
-    minWidth: width > 500 ? 160 : (width - 80) / 3,
-    maxWidth: (width - 48) / 3,
-    borderRadius: 15,
-    overflow: 'hidden',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  featureGradient: {
-    padding: 12,
     alignItems: 'center',
-    height: 120,
-    justifyContent: 'center',
+    paddingVertical: 18,
+    marginHorizontal: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.07,
+    shadowRadius: 4,
+    elevation: 2,
   },
-  featureIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 8,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#6b4f4f',
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.15,
-        shadowRadius: 2,
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  featureTitle: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#6b4f4f',
-    marginBottom: 4,
+  infoCardTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: '#4b2e23',
+    marginBottom: 2,
     textAlign: 'center',
   },
-  featureDescription: {
-    fontSize: 10,
-    color: '#8b6a5c',
-    opacity: 0.8,
+  infoCardDescription: {
+    fontSize: 11,
+    color: '#4b2e23',
     textAlign: 'center',
+  },
+  bottomNavbar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#000',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 10,
+    gap: 32,
+  },
+  navButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    paddingHorizontal: 16,
+  },
+  navButtonText: {
+    color: '#fff',
+    fontSize: 15,
+    fontWeight: '600',
+    marginLeft: 4,
   },
 });
 
