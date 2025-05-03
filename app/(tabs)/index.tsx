@@ -1,74 +1,79 @@
-import { Image, StyleSheet, Platform } from 'react-native';
+// import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+// import MainScreen from "../screens/MainScreen"; // Import the custom Home Screen
+// import ExploreScreen from "./explore"; // Other tab screen
+//import CustomerLogin from "../screens/CustomerLogin"; 
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// const Tab = createBottomTabNavigator();
 
-export default function HomeScreen() {
+// export default function AppNavigator() {
+//   return (
+//     <Tab.Navigator>
+//       <Tab.Screen name="Home" component={MainScreen} /> 
+//       <Tab.Screen name="Explore" component={ExploreScreen} />
+//<Tab.Screen name="CustomerLogin" component={CustomerLogin} />
+//     </Tab.Navigator>
+//   );
+// }
+
+
+
+// import { registerRootComponent } from "expo";
+// import React from "react";
+// import { NavigationContainer } from "@react-navigation/native";
+// import { createStackNavigator } from "@react-navigation/stack";
+// import MainScreen from "../screens/MainScreen";
+// import CustomerLogin from "../screens/CustomerLogin"; // Import CustomerLogin
+
+
+
+// const Stack = createStackNavigator();
+
+// const App = () => {
+//   return (
+//   <NavigationContainer>
+//       <Stack.Navigator screenOptions={{ headerShown: false }}>
+//         <Stack.Screen name="MainScreen" component={MainScreen} />
+//         <Stack.Screen name="CustomerLogin" component={CustomerLogin} /> 
+//       </Stack.Navigator>
+//     </NavigationContainer>
+//   );
+// };
+
+// registerRootComponent(App); 
+// export default App;
+import React from 'react';
+import { createStackNavigator } from '@react-navigation/stack';
+import MainScreen from '../screens/MainScreen';
+import CustomerLogin from '../screens/CustomerLogin';
+import CustomerSignup from '../screens/CustomerSignup';
+import ShopkeeperLogin from '../screens/ShopkeeperLogin';
+import ShopkeeperSignup from '../screens/ShopkeeperSignup';
+import ShopkeeperDashboard from '../screens/ShopkeeperDashboard';
+import CustomerHome from '../screens/CustomerHome';
+import CategoryScreen from '../screens/CategoryScreen';
+import AdminDashboard from '../screens/AdminDashboard';
+
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <Stack.Navigator
+      initialRouteName="MainScreen"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen name="MainScreen" component={MainScreen} />
+      <Stack.Screen name="CustomerLogin" component={CustomerLogin} />
+      <Stack.Screen name="CustomerSignup" component={CustomerSignup} />
+      <Stack.Screen name="ShopkeeperLogin" component={ShopkeeperLogin} />
+      <Stack.Screen name="ShopkeeperSignup" component={ShopkeeperSignup} />
+      <Stack.Screen name="ShopkeeperDashboard" component={ShopkeeperDashboard} />
+      <Stack.Screen name="CustomerHome" component={CustomerHome} />
+      <Stack.Screen name="CategoryScreen" component={CategoryScreen} />
+      <Stack.Screen name="AdminDashboard" component={AdminDashboard} />
+    </Stack.Navigator>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
-  },
-});
+export default App;
